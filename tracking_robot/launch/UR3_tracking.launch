@@ -4,7 +4,7 @@
 
 
 	<include file="$(find tracking_robot)/launch/usb_cam_stream_publisher.launch" pass_all_args="true">
- 	  	<arg name="video_device" value="/dev/video0" />
+ 	  	<arg name="video_device" value="/dev/video1" />
 		<arg name="image_width"  value="640" />  
 		<arg name="image_height" value="480" />
 	</include>
@@ -28,7 +28,6 @@
 
 	<node pkg="tracking_robot" type="target_tracker" name="target_tracker">
 	</node>		
-	
 
 </launch>
 

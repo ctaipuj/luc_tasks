@@ -60,11 +60,11 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
+add_message_files(
+    FILES
+    status_msg.msg
 #   Message2.msg
-# )
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -81,10 +81,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-## generate_messages(
-#   DEPENDENCIES
-#   geometry_msgs
-#)
+generate_messages(
+   DEPENDENCIES
+   geometry_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -151,8 +151,7 @@ add_library(tracking_robot
 #add_executable(move_robot_goal src/move_robot_goal.cpp)
 #add_executable(track_robot src/track_robot.cpp)
 add_executable(robot_tracking src/main_tracking.cpp src/robot_tracking.cpp) #Este es el tracking
-add_executable(target_tracker src/target_tracker)
-add_executable(ur3_attach_camera src/ur3_attach_camera)
+add_executable(status src/status.cpp)
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -169,8 +168,8 @@ add_executable(ur3_attach_camera src/ur3_attach_camera)
 #target_link_libraries(move_robot_goal ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 #target_link_libraries(track_robot ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 target_link_libraries(robot_tracking ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-target_link_libraries(target_tracker ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-target_link_libraries(ur3_attach_camera ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(status ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
 #############
 ## Install ##
 #############

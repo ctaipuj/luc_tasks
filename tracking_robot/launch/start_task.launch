@@ -1,0 +1,11 @@
+<launch>
+
+   <node pkg="tracking_robot" type="robot_tracking" name="robot_tracking">
+	</node>		
+
+
+   <node pkg="tracking_robot" type="status" name="status">
+	</node>	
+
+</launch>
+

@@ -17,6 +17,8 @@
 
 #include <robotiq_85_control/gripper_ur_control.h>
 
+#include  "tracking_robot/status_msg.h"
+
 
 class Trackingrobot{
 
@@ -24,9 +26,10 @@ class Trackingrobot{
 	   
 	   ros::NodeHandle n;
 	   ros::Publisher track;
+	   ros::Subscriber sub; 
 	   ros::Rate rate(); 	   
            
-           //--------------------------------
+       //--------------------------------
 
 	   tf::TransformListener listener;
 	   tf::StampedTransform transform_aruco;			
@@ -46,8 +49,9 @@ class Trackingrobot{
 	   std::stringstream comando;
 	   const int filas = 3;
            const int columnas = 6;
-	   const int filas_aux = 1;	
-         	
+	   const int filas_aux = 1;
+
+		
    
 		
 
@@ -64,8 +68,12 @@ class Trackingrobot{
 	   void MoveRobot();	//mueve el robot a la posicion deseada
 	   void publisher();
 	   void Attach_camera();
-
-
+	   void Back_home();
+	   void status_callback(const tracking_robot::status_msg& msg);
+	   int auxx_status;
+	   bool status_tracking;
+	   bool init_ok;
+	   
 
 };
 

@@ -5,6 +5,7 @@
 Trackingrobot::Trackingrobot(){
 
 	track = n.advertise<std_msgs::String>("/ur_driver/URScript",1);
+	sub = n.subscribe("sstatus", 1, &Trackingrobot::status_callback, this);
 	ros::Duration(1).sleep();
 	
 	//---------------------------------------------------------------
@@ -24,9 +25,9 @@ void Trackingrobot::Home(){
 
  
         double pos_home[4][columnas]= {{ 0.0,-1.57,0.0,-1.57, 0.0,0.0}, 
-			               { 0.0286,-1.5566,1.4894,-1.4570,-1.5964,6.2779},
-				       {-1.99,-1.85,2.17,-1.87,-1.63,5.82},
-				       {-2.05,-1.81,2.32,-2.05,-1.58,5.82}};
+				       { 0.0286,-1.5566,1.4894,-1.4570,-1.5964,6.2779},
+				       {-2.03,-1.94,2.11,-1.74,-1.61,2.66},
+                 		       {-2.03,-1.86,2.32,-2.04,-1.61,2.66}}; //-2.05,-1.81,2.32,-2.05,-1.58,5.82
         
 	g.init();	
 	ros::Duration(5).sleep();
@@ -69,9 +70,9 @@ void Trackingrobot::TakeCamera(){
 
 void Trackingrobot::HomeTraking(){
 
-	double pos_home_tracking[filas][columnas]={{-1.99,-1.85,2.17,-1.87,-1.63,5.82},
-						  {0.0,-1.57,0.0,-1.57, 0.0,0.0},
-					          {-0.074, -1.597, 1.555, -3.124, -1.513, 3.1414}};
+	double pos_home_tracking[filas][columnas]={{-2.03,-1.94,2.11,-1.74,-1.61,2.66}, //-1.99,-1.85,2.17,-1.87,-1.63,5.82
+											   {0.0,-1.57,0.0,-1.57, 0.0,0.0},
+											   {-0.074, -1.597, 1.555, -3.124, -1.513, 3.1414}};
 			                           
 	for(int i = 0; i < 3; i++){
 
@@ -202,8 +203,46 @@ void Trackingrobot::Attach_camera(){
 	moveit::planning_interface::MoveGroupInterface move_group("manipulator");
 	move_group.attachObject(collision_object.id);
 
+	
+
 }
 
+void Trackingrobot::Back_home(){
+	
+	double pos_home_tracking[5][columnas]={{-2.03,-1.94,2.11,-1.74,-1.61,2.66},
+					       {-2.03,-1.86,2.32,-2.04,-1.61,2.66},
+					       {-2.03,-1.94,2.11,-1.74,-1.61,2.66},
+					       {-0.02,-1.57,0.02,-1.57,-0.02,0.03},
+					       { 0.0,-3.14,2.65,-4.22,0.0,4.71}};
+			                           
+	for(int i = 0; i < 5; i++){
+
+		base     = pos_home_tracking[i][0];
+		shoulder = pos_home_tracking[i][1]; 
+		elbow    = pos_home_tracking[i][2];
+		wrist1   = pos_home_tracking[i][3];
+		wrist2   = pos_home_tracking[i][4];
+		wrist3   = pos_home_tracking[i][5];
+		
+	 	comando<<"movej(["<<base<<","<<shoulder<<","<<elbow<<","<<wrist1<<","<<wrist2<<","
+		       <<wrist3<<"],"<<"a=1.4"<<","<<"v=1.05)\n";
+
+		publisher();
+		ros::Duration(4).sleep();
+		
+		if (i == 1){
+				g.open();
+		}
+
+	}
+}
+
+void Trackingrobot::status_callback(const tracking_robot::status_msg& msg)
+{
+	
+	auxx_status = msg.A;
+
+}
 
 void Trackingrobot::publisher(){
 	 msg.data = comando.str();
